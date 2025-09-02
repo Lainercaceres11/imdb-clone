@@ -7,7 +7,6 @@ export const Header = () => {
     <div className="flex justify-between items-center p-3 max-w-6xl mx-auto">
       <ul className="flex gap-4">
         <li className="hidden sm:block">
-          {/* <Link href={"/sign-in"}>Sign-in</Link> */}
           <UserButton />
         </li>
 

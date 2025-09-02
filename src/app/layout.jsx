@@ -1,13 +1,6 @@
-import { Geist, Geist_Mono } from "next/font/google";
-import { Header, Providers } from "@/components";
-
+import { ClerkProvider } from "@clerk/nextjs";
 import "./globals.css";
-import {
-  ClerkProvider,
-  SignedOut,
-  SignInButton,
-  SignUpButton,
-} from "@clerk/nextjs";
+import { Header, Providers } from "../components";
 
 export const metadata = {
   title: "Create Next App",
@@ -21,7 +14,6 @@ export default function RootLayout({ children }) {
         <body className="bg-white dark:bg-[#191919] text-[#37352f] dark:text-[#ffffffcf]">
           <Providers>
             <Header />
-
             {children}
           </Providers>
         </body>

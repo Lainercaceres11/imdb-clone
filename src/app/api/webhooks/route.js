@@ -1,5 +1,4 @@
 import { verifyWebhook } from "@clerk/nextjs/webhooks";
-import { NextRequest } from "next/server";
 
 export async function POST() {
   try {
@@ -15,15 +14,15 @@ export async function POST() {
     console.log("Webhook payload:", evt.data);
 
     if (eventType === "user.created") {
-      console.log("User created event");
+      console.log("user created");
     }
 
     if (eventType === "user.updated") {
-      console.log("User updated event");
+      console.log("user updated");
     }
 
     if (eventType === "user.deleted") {
-      console.log("User delete event");
+      console.log("user deleted");
     }
 
     return new Response("Webhook received", { status: 200 });
