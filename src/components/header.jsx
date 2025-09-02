@@ -1,13 +1,16 @@
 import Link from "next/link";
 import { DarkModeSwitch } from ".";
+import { SignedOut, SignOutButton, UserButton } from "@clerk/nextjs";
 
 export const Header = () => {
   return (
     <div className="flex justify-between items-center p-3 max-w-6xl mx-auto">
       <ul className="flex gap-4">
         <li className="hidden sm:block">
-          <Link href={"/"}>Sign-in</Link>
+          {/* <Link href={"/sign-in"}>Sign-in</Link> */}
+          <UserButton />
         </li>
+
         <li className="hidden sm:block">
           <Link href={"/"}>Home</Link>
         </li>
