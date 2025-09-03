@@ -1,6 +1,6 @@
 import { ClerkProvider } from "@clerk/nextjs";
 import "./globals.css";
-import { Header, Providers } from "../components";
+import { Header, Navbar, Providers } from "../components";
 
 export const metadata = {
   title: "Create Next App",
@@ -14,6 +14,7 @@ export default function RootLayout({ children }) {
         <body className="bg-white dark:bg-[#191919] text-[#37352f] dark:text-[#ffffffcf]">
           <Providers>
             <Header />
+            <Navbar />
             {children}
           </Providers>
         </body>
