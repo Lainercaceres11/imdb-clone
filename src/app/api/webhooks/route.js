@@ -1,7 +1,11 @@
 import { Webhook } from "svix";
 import { headers } from "next/headers";
-import { createOrUpdateUser, deleteUser } from "@/lib/actions/user";
+
 import { clerkClient } from "@clerk/nextjs/server";
+import {
+  createOrUpdateUser,
+  deleteUser,
+} from "../../../lib/mongodb/actions/user";
 
 export async function POST(req) {
   const SIGNING_SECRET = process.env.SIGNING_SECRET;
