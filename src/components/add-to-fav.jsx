@@ -1,8 +1,8 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { useUser } from "@clerk/nextjs";
-import { useRouter } from "next/navigation";
+import { useState, useTransition } from "react";
+import { toggleFavorite } from "../actions/toggleFavorite";
+import { useAuth } from "@clerk/clerk-react";
 
 export const AddToFav = ({
   movieId,
@@ -13,70 +13,45 @@ export const AddToFav = ({
   voteCount,
 }) => {
   const [isFav, setIsFav] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
-  const { isSignedIn, user, isLoaded } = useUser();
-  const router = useRouter();
+  const [isPending, startTransition] = useTransition();
 
-  useEffect(() => {
-    setIsLoading(true);
-    if (isLoaded && isSignedIn && user) {
-      setIsFav(user.publicMetadata?.favs?.includes(movieId));
-      setIsLoading(false);
-    } else {
-      setIsLoading(false);
-    }
-  }, [movieId, isLoaded, isSignedIn, user]);
+  const { isLoaded, userId } = useAuth();
 
-  const handleFavClick = async () => {
-    setIsLoading(true);
-    if (!isSignedIn) {
-      setIsLoading(false);
-      router.push("/sign-in");
-      return;
-    }
-    try {
-      const res = await fetch("/api/user/fav", {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          movieId,
-          title,
-          overview,
-          releaseDate,
-          voteCount,
-          image,
-        }),
-      });
+  if (!isLoaded || !userId) {
+    return <button disabled>Cargando...</button>;
+  }
 
-      if (res.ok) {
-        setIsFav(!isFav);
-      } else {
-        console.error("Failed to update favorites");
+  const handleFavClick = () => {
+    const payloadUser = {
+      movieId,
+      title,
+      image,
+      description: overview,
+      dateReleased: releaseDate,
+      rating: voteCount,
+    };
+    startTransition(async () => {
+      const res = await toggleFavorite(payloadUser, userId);
+
+      if (res.success) {
+        setIsFav(res.favs.some((f) => f.movieId === movieId));
       }
-    } catch (error) {
-      console.error("Error:", error);
-    } finally {
-      setIsLoading(false);
-    }
+    });
   };
 
   return (
-    <div>
-      <button
-        onClick={handleFavClick}
-        className={`p-2 rounded  ${
-          isFav ? "bg-red-300 dark:bg-red-600" : "bg-gray-300 dark:bg-gray-600"
-        }`}
-        disabled={isLoading}
-      >
-        {isLoading
-          ? "Loading..."
-          : isFav
-          ? "Remove from Favorites"
-          : "Add to Favorites"}
-      </button>
-    </div>
+    <button
+      onClick={handleFavClick}
+      className={`p-2 rounded ${
+        isFav ? "bg-red-300 dark:bg-red-600" : "bg-gray-300 dark:bg-gray-600"
+      }`}
+      disabled={isPending}
+    >
+      {isPending
+        ? "Loading..."
+        : isFav
+        ? "Remove from Favorites"
+        : "Add to Favorites"}
+    </button>
   );
 };

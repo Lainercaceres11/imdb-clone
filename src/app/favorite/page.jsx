@@ -1,52 +1,23 @@
-"use client";
+import { auth, currentUser } from "@clerk/nextjs/server";
 
-import { useEffect, useState } from "react";
+import { getUserFavs } from "../../actions/getUserFavorites";
 
-import { useUser } from "@clerk/nextjs";
-import { CardGrid } from "../../components";
+export default async function Favorites() {
+  const { userId } = await auth();
+  console.log(userId);
 
-export default function Favorites() {
-  const [results, setResults] = useState(null);
-  const { isSignedIn, user, isLoaded } = useUser();
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const res = await fetch("/api/user/getFav", {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-          },
-        });
-        if (res.ok) {
-          const data = await res.json();
-          setResults(data.favs);
-        }
-      } catch (error) {
-        console.error("Error:", error);
-      }
-    };
-    if (isLoaded && isSignedIn && user) {
-      fetchData();
-    }
-  }, []);
+  const favoritesMovies = await getUserFavs(userId);
 
-  if (!isSignedIn) {
-    return (
-      <div className="text-center mt-10">
-        <h1 className="text-xl my-5">Please sign in to view your favorites</h1>
-      </div>
-    );
-  }
-
+  
   return (
     <div>
-      {!results ||
-        (results.length === 0 && (
+      {!favoritesMovies ||
+        (favoritesMovies.length === 0 && (
           <h1 className="text-center pt-6">No results found</h1>
         ))}
-      {results && results.length !== 0 && (
+      {favoritesMovies && favoritesMovies.length !== 0 && (
         <CardGrid
-          movies={results.map((result) => ({
+          movies={favoritesMovies.map((result) => ({
             ...result,
             id: result.movieId,
             title: result.title,

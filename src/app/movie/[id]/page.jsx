@@ -1,5 +1,6 @@
 import { AddToFav } from "../../../components";
 import { getMovie } from "../../../services";
+import Link from "next/link";
 
 export default async function Movie({ params }) {
   const { id } = await params;
