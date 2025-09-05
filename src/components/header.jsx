@@ -1,27 +1,34 @@
+"use client";
+
 import Link from "next/link";
 import { DarkModeSwitch } from ".";
-import { SignedOut, SignOutButton, UserButton } from "@clerk/nextjs";
+import { UserButton, useUser } from "@clerk/nextjs";
 
 export const Header = () => {
+  const { isSignedIn } = useUser();
   return (
     <div className="flex justify-between items-center p-3 max-w-6xl mx-auto">
       <ul className="flex gap-4">
-        <li className="hidden sm:block">
-          <Link href={"/sign-in"}>Sing-in</Link>
-        </li>
-
-        <li className="hidden sm:block">
-          <UserButton />
-        </li>
+        {isSignedIn ? (
+          <li className="hidden sm:block">
+            <UserButton />
+          </li>
+        ) : (
+          <li className="hidden sm:block">
+            <Link href={"/sign-in"}>Sing-in</Link>
+          </li>
+        )}
 
         <li className="hidden sm:block">
           <Link href={"/"}>Home</Link>
         </li>
-        <li className="hidden sm:block">
-          <Link href={"/favorites"}>Favorites</Link>
-        </li>
+
         <li className="hidden sm:block">
           <Link href={"/about"}>About</Link>
+        </li>
+
+        <li className="hidden sm:block">
+          <Link href={"/favorite"}>Favorites</Link>
         </li>
       </ul>
       <div className="flex items-center gap-4">
