@@ -5,3 +5,4 @@ export * from "./navbar";
 export * from "./navbar-item";
 export * from "./card";
 export * from "./add-to-fav";
+export * from "./pagination";
