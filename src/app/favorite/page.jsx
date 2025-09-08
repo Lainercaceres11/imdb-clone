@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { useAuth } from "@clerk/clerk-react";
 import { CardGrid } from "../../components";
+import { SearchBox } from "../../components/search-box";
 
 export default function FavoritesClient() {
   const { userId } = useAuth();
@@ -40,15 +41,18 @@ export default function FavoritesClient() {
   }
 
   return (
-    <CardGrid
-      movies={favoritesMovies.map((result) => ({
-        ...result,
-        id: result.movieId,
-        title: result.title,
-        backdrop_path: result.image,
-        overview: result.description,
-        vote_count: result.rating,
-      }))}
-    />
+    <>
+      {favoritesMovies.length >= 10 && <SearchBox />}
+      <CardGrid
+        movies={favoritesMovies.map((result) => ({
+          ...result,
+          id: result.movieId,
+          title: result.title,
+          backdrop_path: result.image,
+          overview: result.description,
+          vote_count: result.rating,
+        }))}
+      />
+    </>
   );
 }

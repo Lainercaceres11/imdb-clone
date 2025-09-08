@@ -1,7 +1,6 @@
 import { ClerkProvider } from "@clerk/nextjs";
 import "./globals.css";
 import { Header, Navbar, Providers } from "../components";
-import { SearchBox } from "../components/search-box";
 
 export const metadata = {
   title: "Create Next App",
@@ -16,7 +15,7 @@ export default function RootLayout({ children }) {
           <Providers>
             <Header />
             <Navbar />
-            <SearchBox />
+      
             {children}
           </Providers>
         </body>

@@ -1,8 +1,14 @@
 import { CardGrid } from "../components";
+import { SearchBox } from "../components/search-box";
 import { getMovies } from "../services";
 
 export default async function Home() {
   const movies = await getMovies();
 
-  return <CardGrid movies={movies} />;
+  return (
+    <div>
+      <SearchBox />
+      <CardGrid movies={movies} />
+    </div>
+  );
 }
