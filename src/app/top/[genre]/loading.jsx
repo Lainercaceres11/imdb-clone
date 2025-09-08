@@ -1,19 +1,22 @@
 export default function Loading() {
+  const skeletons = new Array(10).fill(null);
+
   return (
-    <div className="w-full animate-pulse">
-      <div className="p-4 md:pt-8 flex flex-col md:flex-row content-center max-w-6xl mx-auto md:space-x-6">
-        <div className="rounded-lg w-full md:w-96 h-56 bg-gray-300"></div>
+    <div className="sm:grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 max-w-6xl mx-auto py-4 animate-pulse">
+      {skeletons.map((_, index) => (
+        <div
+          key={index}
+          className="rounded-lg sm:border sm:border-slate-400 sm:m-2 overflow-hidden"
+        >
+          <div className="w-full sm:h-36 bg-gray-300 dark:bg-gray-700" />
 
-        <div className="p-2 flex-1">
-          <div className="h-6 bg-gray-300 rounded w-2/3 mb-3"></div>
-          <div className="h-4 bg-gray-300 rounded w-full mb-3"></div>
-          <div className="h-4 bg-gray-300 rounded w-5/6 mb-3"></div>
-          <div className="h-4 bg-gray-300 rounded w-1/3 mb-3"></div>
-          <div className="h-4 bg-gray-300 rounded w-1/4 mb-3"></div>
-
-          <div className="h-10 bg-gray-300 rounded-lg w-32 mt-4"></div>
+          <div className="p-2 space-y-2">
+            <div className="h-4 bg-gray-300 dark:bg-gray-700 rounded w-3/4" />
+            <div className="h-3 bg-gray-300 dark:bg-gray-700 rounded w-full" />
+            <div className="h-3 bg-gray-300 dark:bg-gray-700 rounded w-2/3" />
+          </div>
         </div>
-      </div>
+      ))}
     </div>
   );
 }
