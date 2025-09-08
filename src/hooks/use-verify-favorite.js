@@ -1,18 +1,19 @@
 "use client";
-
 import { useState, useEffect } from "react";
 import { useAuth } from "@clerk/clerk-react";
 
-export function useVerifyFavorites() {
+export function useVerifyFavorites(movieId) {
   const { userId } = useAuth();
   const [isFav, setIsFav] = useState(false);
 
   useEffect(() => {
-    if (!userId) return;
+    if (!userId || !movieId) return;
 
     const verifyFavorite = async () => {
       try {
-        const res = await fetch(`/api/verify-favorite?userId=${userId}`);
+        const res = await fetch(
+          `/api/check-favorite?userId=${userId}&movieId=${movieId}`
+        );
         const data = await res.json();
 
         if (data.success) {
@@ -24,7 +25,7 @@ export function useVerifyFavorites() {
     };
 
     verifyFavorite();
-  }, [userId]);
+  }, [userId, movieId]);
 
   return { isFav };
 }

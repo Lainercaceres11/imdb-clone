@@ -1,11 +1,55 @@
+"use client";
+
+import { use, useEffect, useState } from "react";
 import { AddToFav } from "../../../components";
-import { getMovie } from "../../../services";
 import Link from "next/link";
+import { useAuth } from "@clerk/nextjs";
+import Loading from "./loading";
 
-export default async function Movie({ params }) {
-  const { id } = await params;
+export default function Movie({ params }) {
+  const { id } = use(params);
+  const [movie, setMovie] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [isFavorite, setIsFavorite] = useState(null);
+  const { userId } = useAuth();
 
-  const movie = await getMovie(id);
+  useEffect(() => {
+    const getMovies = async () => {
+      setIsLoading(true);
+      try {
+        const response = await fetch(`/api/movie/${id}`);
+        const data = await response.json();
+        setMovie(data.movie || null);
+      } catch (err) {
+        console.error("Error fetching movie:", err);
+        setMovie(null);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    getMovies();
+  }, [id]);
+
+  useEffect(() => {
+    const fetchFavoriteStatus = async () => {
+      try {
+        const res = await fetch(
+          `/api/check-favorite?userId=${userId}&movieId=${id}`
+        );
+        const data = await res.json();
+        setIsFavorite(data.isFav);
+      } catch (err) {
+        console.error("Error fetching favorites status:", err);
+      }
+    };
+
+    if (userId) fetchFavoriteStatus();
+  }, [id, userId]);
+
+  if (isLoading) {
+    return <Loading />;
+  }
 
   if (!movie) {
     return (
@@ -13,7 +57,6 @@ export default async function Movie({ params }) {
         <h1 className="text-xl my-5">
           Movie details are not available at the moment!
         </h1>
-
         <p>
           <Link href="/" className="hover:text-amber-600">
             Go Home
@@ -22,7 +65,6 @@ export default async function Movie({ params }) {
       </div>
     );
   }
-
   return (
     <div className="w-full">
       <div className="p-4 md:pt-8 flex flex-col md:flex-row content-center max-w-6xl mx-auto md:space-x-6">
@@ -46,6 +88,7 @@ export default async function Movie({ params }) {
             {movie.vote_count}
           </p>
           <AddToFav
+            isFav={isFavorite}
             movieId={id}
             title={movie.title || movie.name}
             image={movie.backdrop_path || movie.poster_path}
