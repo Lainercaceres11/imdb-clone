@@ -1,33 +1,54 @@
-import { auth, currentUser } from "@clerk/nextjs/server";
+"use client";
 
-import { getUserFavs } from "../../actions/getUserFavorites";
+import { useEffect, useState } from "react";
+import { useAuth } from "@clerk/clerk-react";
+import { CardGrid } from "../../components";
 
-export default async function Favorites() {
-  const { userId } = await auth();
-  console.log(userId);
+export default function FavoritesClient() {
+  const { userId } = useAuth();
+  const [favoritesMovies, setFavoritesMovies] = useState([]);
+  const [loading, setLoading] = useState(true);
 
-  const favoritesMovies = await getUserFavs(userId);
+  useEffect(() => {
+    if (!userId) return;
 
-  
+    const fetchFavs = async () => {
+      try {
+        const res = await fetch(`/api/favorite?userId=${userId}`);
+        const data = await res.json();
+        setFavoritesMovies(data.favs || []);
+      } catch (err) {
+        console.error("Error fetching favorites:", err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchFavs();
+  }, [userId]);
+
+  if (!userId) {
+    return <p className="text-center pt-6">Inicia sesión para ver favoritos</p>;
+  }
+
+  if (loading) {
+    return <p className="text-center pt-6">Cargando favoritos...</p>;
+  }
+
+  if (favoritesMovies.length === 0) {
+    return <h1 className="text-center pt-6">No results found</h1>;
+  }
+
   return (
-    <div>
-      {!favoritesMovies ||
-        (favoritesMovies.length === 0 && (
-          <h1 className="text-center pt-6">No results found</h1>
-        ))}
-      {favoritesMovies && favoritesMovies.length !== 0 && (
-        <CardGrid
-          movies={favoritesMovies.map((result) => ({
-            ...result,
-            id: result.movieId,
-            title: result.title,
-            backdrop_path: result.image,
-            overview: result.description,
-            first_air_date: result.dateReleased.substring(0, 10),
-            vote_count: result.rating,
-          }))}
-        />
-      )}
-    </div>
+    <CardGrid
+      movies={favoritesMovies.map((result) => ({
+        ...result,
+        id: result.movieId,
+        title: result.title,
+        backdrop_path: result.image,
+        overview: result.description,
+        vote_count: result.rating,
+      }))}
+    />
   );
 }
