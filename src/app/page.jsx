@@ -13,7 +13,7 @@ export default async function Home({ searchParams }) {
       <SearchBox />
       <CardGrid movies={movies} />
 
-      <Pagination currentPage={page} />
+      {movies.length >= 1 && <Pagination currentPage={page} />}
     </div>
   );
 }

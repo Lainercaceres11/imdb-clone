@@ -4,17 +4,17 @@ import { useRouter } from "next/navigation";
 
 import { FiArrowLeft, FiArrowRight } from "react-icons/fi";
 
-export const Pagination = ({ currentPage = 1 }) => {
+export const Pagination = ({ currentUrl = "", currentPage = 1 }) => {
   const router = useRouter();
 
-  const goToPage = (page) => {
-    router.push(`/?page=${page}`);
+  const goToPage = (url = "", page) => {
+    router.push(`${url}/?page=${page}`);
   };
 
   return (
     <div className="flex items-center justify-center gap-6 pb-6">
       <button
-        onClick={() => goToPage(currentPage - 1)}
+        onClick={() => goToPage(currentUrl, currentPage - 1)}
         disabled={currentPage <= 1}
         className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition
           ${
@@ -30,7 +30,7 @@ export const Pagination = ({ currentPage = 1 }) => {
       <span className="font-semibold">Página {currentPage}</span>
 
       <button
-        onClick={() => goToPage(currentPage + 1)}
+        onClick={() => goToPage(currentUrl, currentPage + 1)}
         className="flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium bg-blue-600 text-white hover:bg-blue-700 transition"
       >
         Siguiente

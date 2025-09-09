@@ -17,7 +17,7 @@ export const SearchBox = () => {
       onSubmit={handleSubmit}
     >
       <input
-        type="text"
+        type="search"
         placeholder="Search keywords..."
         className="w-full h-14 rounded-md placeholder-gray-500 outline-none bg-transparent flex-1"
         value={search}

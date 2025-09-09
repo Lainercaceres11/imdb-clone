@@ -1,5 +1,6 @@
 "use client";
 
+import { useUser } from "@clerk/nextjs";
 import { useFavorites } from "../hooks/use-favorite";
 
 export const AddToFav = ({
@@ -12,6 +13,8 @@ export const AddToFav = ({
   voteCount,
 }) => {
   const { toggleFavorite } = useFavorites();
+
+  const { isSignedIn } = useUser();
 
   const handleClick = async () => {
     const movie = {
@@ -27,8 +30,9 @@ export const AddToFav = ({
 
   return (
     <button
+      disabled={!isSignedIn}
       onClick={handleClick}
-      className={`p-2 rounded ${
+      className={`p-2 rounded disabled:bg-gray-400 disabled:cursor-not-allowed ${
         isFav ? "bg-red-300 dark:bg-red-600" : "bg-gray-300 dark:bg-gray-600"
       }`}
     >
