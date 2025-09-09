@@ -5,7 +5,6 @@ import { AddToFav } from "../../../components";
 import Link from "next/link";
 import { useAuth } from "@clerk/nextjs";
 import Loading from "./loading";
-import Image from "next/image";
 
 export default function Movie({ params }) {
   const { id } = use(params);
@@ -69,12 +68,11 @@ export default function Movie({ params }) {
   return (
     <div className="w-full">
       <div className="p-4 md:pt-8 flex flex-col md:flex-row content-center max-w-6xl mx-auto md:space-x-6">
-        <Image
-          width={400}
-          height={300}
+        <img
           src={`https://image.tmdb.org/t/p/original/${
             movie.backdrop_path || movie.poster_path
           }`}
+          className="rounded-lg w-full md:w-96 h-56 object-cover"
         />
         <div className="p-2">
           <h2 className="text-lg mb-3 font-bold">
