@@ -2,6 +2,8 @@
 
 import { useUser } from "@clerk/nextjs";
 import { useFavorites } from "../hooks/use-favorite";
+import { useTransition } from "react";
+import { useRouter } from "next/navigation";
 
 export const AddToFav = ({
   isFav,
@@ -13,8 +15,10 @@ export const AddToFav = ({
   voteCount,
 }) => {
   const { toggleFavorite } = useFavorites();
+  const [isPending, startTransition] = useTransition();
 
   const { isSignedIn } = useUser();
+  const router = useRouter();
 
   const handleClick = async () => {
     const movie = {
@@ -25,7 +29,9 @@ export const AddToFav = ({
       dateReleased: releaseDate,
       rating: voteCount,
     };
-    await toggleFavorite(movie);
+
+    startTransition(async () => await toggleFavorite(movie));
+    router.push("/favorite");
   };
 
   return (
@@ -36,7 +42,11 @@ export const AddToFav = ({
         isFav ? "bg-red-300 dark:bg-red-600" : "bg-gray-300 dark:bg-gray-600"
       }`}
     >
-      {isFav ? "Remove from favorites" : "Add to favorites"}
+      {isPending
+        ? "Loading..."
+        : isFav
+        ? "Remove from favorites"
+        : "Add to favorites"}
     </button>
   );
 };

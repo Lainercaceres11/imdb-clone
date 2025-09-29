@@ -28,7 +28,7 @@ export default function FavoritesClient() {
     fetchFavs();
   }, [userId]);
 
-  if (!userId) {
+  if (!userId && !loading) {
     return <p className="text-center pt-6">Inicia sesión para ver favoritos</p>;
   }
 

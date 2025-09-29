@@ -3,33 +3,55 @@
 import Link from "next/link";
 import { DarkModeSwitch } from ".";
 import { UserButton, useUser } from "@clerk/nextjs";
+import { usePathname } from "next/navigation";
+
+const routes = [
+  {
+    id: 1,
+    title: "Home",
+    href: "/",
+  },
+  {
+    id: 2,
+    title: "About",
+    href: "/about",
+  },
+  {
+    id: 3,
+    title: "Favorites",
+    href: "/favorite",
+  },
+];
 
 export const Header = () => {
   const { isSignedIn } = useUser();
+  const location = usePathname();
   return (
-    <div className="flex justify-between items-center p-3 max-w-6xl mx-auto">
+    <div className="flex flex-wrap gap-4 justify-between items-center p-3 max-w-6xl mx-auto">
       <ul className="flex gap-4">
         {isSignedIn ? (
-          <li className="hidden sm:block">
+          <li className="sm:block">
             <UserButton />
           </li>
         ) : (
-          <li className="hidden sm:block">
+          <li className="sm:block">
             <Link href={"/sign-in"}>Sing-in</Link>
           </li>
         )}
-
-        <li className="hidden sm:block">
-          <Link href={"/"}>Home</Link>
-        </li>
-
-        <li className="hidden sm:block">
-          <Link href={"/about"}>About</Link>
-        </li>
-
-        <li className="hidden sm:block">
-          <Link href={"/favorite"}>Favorites</Link>
-        </li>
+        {routes.map((path) => (
+          <>
+            <li
+              key={path.id}
+              className={`sm:block ${
+                location === path.href
+                  ? "underline underline-offset-8 decoration-4 decoration-amber-500 rounded-lg"
+                  : ""
+              }  `}
+            >
+              <Link href={path.href}>{path.title}</Link>
+            </li>
+          </>
+        ))}
       </ul>
       <div className="flex items-center gap-4">
         <DarkModeSwitch />
